@@ -29,7 +29,7 @@ namespace dotnet.Controllers
         {
             return Ok(
                 Service.GetAllEmployees().Any()
-                    ? (object) Service
+                    ? (object) Service.GetAllEmployees()
                     : new Error("Not found", 
                         StatusCodes.Status404NotFound.ToString()));
         }
@@ -37,7 +37,13 @@ namespace dotnet.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return null;
+            var user = Service.GetOne(id);
+            if (user == null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, 
+                    new Error($"requested id {id} is not found ",StatusCodes.Status404NotFound.ToString()));
+            }
+            return Ok(user);
         }
 
         [HttpPost]
@@ -79,7 +85,14 @@ namespace dotnet.Controllers
             Service.UpdateEmployee(id,emp);
             return StatusCode(StatusCodes.Status200OK);
         }
-        
+
+        [HttpPut("/toggle/{id:int}")]
+        public IActionResult ToggleStatus(int id, Employee employee)
+        {
+            Service.EmployeeStatusToggle(id,employee);
+            return StatusCode(StatusCodes.Status200OK,
+                new Success("Status Updated", StatusCodes.Status200OK.ToString()));
+        }
         
 
         [HttpDelete("{id}")]

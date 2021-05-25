@@ -18,6 +18,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace dotnet.Controllers
 {
+    [EnableCors("MyPolicy")]
+    [Authorize]
     public class EmployeeController : Controller
     {
         private EmployeeDbContext _context = null;

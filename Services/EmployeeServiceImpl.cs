@@ -12,7 +12,7 @@ namespace dotnet.Services
 {
     public class EmployeeServiceImpl:IEmployeeService
     {
-        public EmployeeDbContext db;
+        public EmployeeDbContext db=null;
 
         public EmployeeServiceImpl(EmployeeDbContext db)
         {
@@ -20,9 +20,10 @@ namespace dotnet.Services
         }
         public List<Employee> GetAllEmployees()
         {
-            return db.employee
+            var user =db.employee
                 .Include(a => a.attendences)
                 .ToList<Employee>();
+            return user;
         }
 
         public void AddEmployee(Employee employee)
@@ -67,6 +68,14 @@ namespace dotnet.Services
         {
             db.attendance.Add(attendance);
             db.SaveChanges();
+        }
+
+        public IQueryable<Users> auth(Users users)
+        {
+            return (from u in db.users
+                where u.userName == users.userName && u.password == users.password
+                select u);
+            
         }
     }
 }

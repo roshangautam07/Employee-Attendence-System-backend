@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using dotnet.Models;
 using dotnet.Payload.Request;
 using dotnet.Payload.Response;
@@ -16,6 +17,7 @@ namespace dotnet.Services
 
         public void UpdateEmployee(int id, Employee employee);
 
-        public void EmployeeStatusToggle(int id, Employee employee);
+        public void EmployeeStatusToggle(int id,Employee employee);
+        public IQueryable<Users> auth(Users users);
     }
 }
