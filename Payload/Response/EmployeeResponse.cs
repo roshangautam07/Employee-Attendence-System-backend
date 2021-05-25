@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using dotnet.Models;
 
-namespace dotnet.Models
+namespace dotnet.Payload.Response
 {
-    public class Employee
+    public class EmployeeResponse
     {
-        [Key]  // Mark field as primary key
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public int id { get; set; }
         [Required(ErrorMessage = "Employee FirstName is required")]
         public string firstName { get; set; }
@@ -25,7 +24,7 @@ namespace dotnet.Models
         public Boolean isActive { get; set; }
         public List<Attendance> attendences { get; set; }
 
-        public Employee()
+        public EmployeeResponse()
         {
             attendences = new List<Attendance>();
         }

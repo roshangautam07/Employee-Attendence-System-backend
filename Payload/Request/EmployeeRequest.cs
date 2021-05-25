@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using dotnet.Models;
 
-namespace dotnet.Models
+namespace dotnet.Payload.Request
 {
-    public class Employee
+    public class EmployeeRequest
     {
-        [Key]  // Mark field as primary key
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public int id { get; set; }
         [Required(ErrorMessage = "Employee FirstName is required")]
         public string firstName { get; set; }
@@ -23,12 +22,5 @@ namespace dotnet.Models
         public string address { get; set; }
         public string contact { get; set; }
         public Boolean isActive { get; set; }
-        public List<Attendance> attendences { get; set; }
-
-        public Employee()
-        {
-            attendences = new List<Attendance>();
-        }
-        
     }
 }
