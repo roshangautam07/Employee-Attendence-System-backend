@@ -27,17 +27,17 @@ SAVE EMPLOYEE DETAIL:
             
 required field:
     
-    firstName:string; 
-    lastName:string;
-    gender:string;
-    dob:string;
+    string firstName 
+    string lastName
+    string gender
+    string dob
     
+    optional field:
     
-optional field:
-    middleName:string;
-    address:string;
-    contact:string;
-    isActive:boolean;
+        string middleName
+        string address
+        string contact
+        bool isActive
     
 UPDATE EMPLOYEE DETAIL:
     https://localhost:5001/Employee/updateEmployee
