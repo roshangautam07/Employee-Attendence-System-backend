@@ -12,7 +12,6 @@ namespace dotnet.Models
         public int id { get; set; }
         [Required(ErrorMessage = "Employee FirstName is required")]
         public string firstName { get; set; }
-        [Required(ErrorMessage = "Employee MiddleName is required")]
         public string middleName { get; set; }
         [Required(ErrorMessage = "Employee LastName is required")]
         public string lastName { get; set; }

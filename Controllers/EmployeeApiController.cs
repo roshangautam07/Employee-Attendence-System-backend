@@ -28,10 +28,7 @@ namespace dotnet.Controllers
         public IActionResult Get()
         {
             return Ok(
-                Service.GetAllEmployees().Any()
-                    ? (object) Service.GetAllEmployees()
-                    : new Error("Not found", 
-                        StatusCodes.Status404NotFound.ToString()));
+                Service.GetAllEmployees());
         }
 
         [HttpGet("{id}")]

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Logging;
 using dotnet.Models;
 using dotnet.Payload.Response;
+using dotnet.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace dotnet.Controllers
 {
-    [EnableCors("MyPolicy")]
     [Authorize]
+    [EnableCors("MyPolicy")]
     public class EmployeeController : Controller
     {
         private EmployeeDbContext _context = null;
+        public IEmployeeService Service;
 
         public EmployeeController(EmployeeDbContext _context)
         {
@@ -43,13 +45,26 @@ namespace dotnet.Controllers
         {
             return Json(
                 _context.employee
-                    .Include(a => a.attendences)
+                    .Include(a => a.attendences)    
                     .ToList<Employee>()
                     .Any()
                     ? (object) _context.employee
                     : StatusCode(StatusCodes.Status404NotFound,
                         new Error("No data found",StatusCodes.Status204NoContent.ToString())));
         }
+        
+         public IActionResult GetAllEmployee()
+                {
+                    return Json(
+                        _context.employee   
+                            .ToList<Employee>()
+                            .Any()
+                            ? (object) _context.employee
+                            : StatusCode(StatusCodes.Status404NotFound,
+                                new Error("No data found",StatusCodes.Status204NoContent.ToString())));
+                    // return Json(
+                    //     Service.GetAllEmployees());
+                }
 
 
         public IActionResult Get(string id)
@@ -62,9 +77,7 @@ namespace dotnet.Controllers
                 return StatusCode(StatusCodes.Status404NotFound, 
                     new Error($"requested id {ID} is not found ",StatusCodes.Status404NotFound.ToString()));
             }
-
-
-            return Ok(objEmp);
+             return Ok(objEmp);
         }
 
         public IActionResult save([FromBody] Employee employee)
@@ -78,7 +91,8 @@ namespace dotnet.Controllers
             _context.employee.Add(employee);
             _context.SaveChanges();
             return Json(
-                _context.employee.ToList<Employee>());
+                StatusCode(StatusCodes.Status200OK,
+                    new Success("Successfully saved",StatusCodes.Status200OK.ToString())));
             }else{
 
                 return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -87,10 +101,20 @@ namespace dotnet.Controllers
 
         public IActionResult saveAttendance([FromBody] Attendance attendance)
         {
-            _context.attendance.Add(attendance);
-            _context.SaveChanges();
-            return Json(
-                _context.attendance.ToList<Attendance>());
+           
+            var context = new ValidationContext(attendance, null, null);
+            var result = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(attendance,context,result,true);
+            if (result.Count == 0)
+
+            {
+
+                _context.attendance.Add(attendance);
+                _context.SaveChanges();
+                return Json(
+                    _context.attendance.ToList<Attendance>());
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, result);
         }
 
         public IActionResult updateEmployee(int id, [FromBody] Employee employee)
@@ -116,6 +140,13 @@ namespace dotnet.Controllers
             _context.employee.Update(emp);
             _context.SaveChanges();
             return Json(emp);
+        }
+
+        public IActionResult GetAttendanceByEmployee(int id)
+        {
+            return Json((from a in _context.attendance
+                where a.employeeId == id
+                select a).ToList<Attendance>());
         }
     }
 }
