@@ -20,7 +20,12 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
-
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'demo'
+    scannerMode: 'MSBuild'
+    projectKey: 'roshangautam_roshangautam_AYVJEibIAHCoTr7hFxfU'
+    projectName: 'roshangautam_roshangautam_AYVJEibIAHCoTr7hFxfU'
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
